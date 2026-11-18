@@ -36,6 +36,18 @@ def test_parse_config_returns_error_for_invalid_yaml(tmp_path: Path) -> None:
     assert error is not None
 
 
+def test_parse_config_returns_error_for_invalid_utf8(tmp_path: Path) -> None:
+    """Test parse_config handles invalid UTF-8 without a traceback."""
+    invalid_encoding = tmp_path / "invalid-encoding.yml"
+    invalid_encoding.write_bytes(b"\x80")
+
+    checks, error = parse_config(invalid_encoding)
+
+    assert checks == []
+    assert error is not None
+    assert "utf-8" in error.lower()
+
+
 def test_parse_config_returns_error_for_directory() -> None:
     """Test parse_config returns an error when given a directory instead of a file."""
     # given a directory path (e.g., --config .gatorgrade instead of --config gatorgrade.yml)

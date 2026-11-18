@@ -479,6 +479,7 @@ def parse_config(
         return [], None
     except (
         yaml.YAMLError,
+        UnicodeDecodeError,
         ValueError,
         TypeError,
         IndexError,
